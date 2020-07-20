@@ -1,5 +1,3 @@
-#encoding=utf-8
-#https://keras-cn.readthedocs.io/en/latest/getting_started/functional_API/  连接两个输入例子
 from __future__ import print_function
 from keras.callbacks import LambdaCallback, Callback
 from keras.models import Sequential
@@ -323,9 +321,9 @@ if __name__ == '__main__':
     batch_size = 64
     epochs = 10
     maxlen = 128
-    train_path = '../data/generate_STR/total_train.fasta'
-    test_path = '../data/generate_STR/total_test.fasta'
-    log_path = '../data/log.txt'
+    train_path = './data/generate_STR/total_train.fasta'
+    test_path = './data/generate_STR/total_test.fasta'
+    log_path = './data/log.txt'
     total_start_time = time.time()
     model = model_CNN_LSTM_2D()
     #model = model_CNN()
