@@ -77,22 +77,22 @@ def get_random_batch(seqs, labels):
 def loadModel(epoch):
     #model.load_weights('my_model_weights.h5')
     #json and create model
-    json_file = open('../saved_model/model.json', 'r')
+    json_file = open('./saved_model/model.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     model = model_from_json(loaded_model_json)
     # load weights into new model
-    name="../saved_model/model_"+str(epoch)+".h5"
+    name="./saved_model/model_"+str(epoch)+".h5"
     model.load_weights(name)
     print("Loaded model from disk")
     return model
 def saveModel(epoch):
     # serialize model to JSON
     model_json = model.to_json()
-    with open("../saved_model/model.json", "w") as json_file:
+    with open("./saved_model/model.json", "w") as json_file:
         json_file.write(model_json)
     #serialize weights to HDF5
-    name="../saved_model/model_"+str(epoch)+".h5"
+    name="./saved_model/model_"+str(epoch)+".h5"
     model.save_weights(name)
     print("Saved model to disk")
     return
