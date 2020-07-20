@@ -98,17 +98,16 @@ def read_fasta(data_path):
     seqs = []
     labels = []
     for record in records:
-        seqs.append(str(record.seq))
+        seqs.append(str(record.seq).upper())
         labels.append(int(record.id))
     return seqs, labels
 
 def vectorization(seqs, labels):
     kmer = np.array([[ltrdict.get(x,[0,0,0,0]) for x in seq] for seq in seqs])
     kmer = np.expand_dims(kmer,1)
-    #predict = np.squeeze(labels,1)
     return kmer, labels
 def get_batch(seqs, labels):
-    duration = len(seqs)
+    duration = len(labels)
     for i in range(0,duration//batch_size):
         idx = i*batch_size
         yield vectorization(seqs[idx:idx+batch_size],labels[idx:idx+batch_size])
@@ -324,8 +323,6 @@ if __name__ == '__main__':
     batch_size = 64
     epochs = 10
     maxlen = 128
-    # train_path = '../data/generate_STR/Escherichia_coli_train.fasta'
-    # test_path = '../data/generate_STR/Escherichia_coli_test.fasta'
     train_path = '../data/generate_STR/total_train.fasta'
     test_path = '../data/generate_STR/total_test.fasta'
     log_path = '../data/log.txt'
