@@ -100,8 +100,7 @@ def saveModel(epoch):
 if __name__ == '__main__':
     batch_size = 16
     maxlen = 128
-    test_path = '../data/generate_STR/human_chr1_test.fasta'
-    #test_path = '../data/generate_STR/human_chr1_test.fasta'
+    test_path = './data/generate_STR/human_chr1_test.fasta'
     model = loadModel(7)
     #model = model_CNN()
     print(model.summary())
