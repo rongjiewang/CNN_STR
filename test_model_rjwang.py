@@ -1,5 +1,3 @@
-#encoding=utf-8
-#https://keras-cn.readthedocs.io/en/latest/getting_started/functional_API/  连接两个输入例子
 from __future__ import print_function
 from keras.callbacks import LambdaCallback, Callback
 from keras.models import Sequential
@@ -102,9 +100,9 @@ def saveModel(epoch):
 if __name__ == '__main__':
     batch_size = 16
     maxlen = 128
-    test_path = '../data/test.fasta'
+    test_path = '../data/generate_STR/human_chr1_test.fasta'
     #test_path = '../data/generate_STR/human_chr1_test.fasta'
-    model = loadModel(0)
+    model = loadModel(7)
     #model = model_CNN()
     print(model.summary())
     seqs,labels = read_fasta(test_path)
