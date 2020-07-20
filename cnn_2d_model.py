@@ -343,10 +343,6 @@ if __name__ == '__main__':
                 epoch+1,  i, total_num_batch, elapsed, score_eval[0], score_eval[1])
             logging(log_str,log_path)
             if(i%100==0):
-                # print("epoch:",epoch,'\t',
-                # 	  "batch:",'\t',i,'\t', 
-                # 	  model.metrics_names[0], ' : ',score_eval[0],'\t',
-                #       model.metrics_names[1], ' : ', '\t',score_eval[1])
                 print('| epoch: {:3d} | batche/batches: {:>6d}/{:d} ' \
                       '| s/batch: {:5.2f} | loss: {:5.4f} | accuracy: {:5.4f}'.format(
                 epoch+1,  i, total_num_batch, elapsed, score_eval[0], score_eval[1]))
