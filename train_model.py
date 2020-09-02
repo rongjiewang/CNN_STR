@@ -1,30 +1,18 @@
 from __future__ import print_function
-from keras.callbacks import LambdaCallback, Callback
+import keras
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers import LSTM
-from keras.layers import Conv1D, MaxPooling1D
 from keras.layers.convolutional import Conv2D, MaxPooling2D
-from keras.regularizers import l1
 from keras.optimizers import RMSprop
-from keras.utils.data_utils import get_file
 from keras.models import model_from_json
 import numpy as np
 import random
-import sys
-import io
-import math
-import keras
 from keras.models import load_model
-from keras import backend as K
 from itertools import product
 from Bio import SeqIO
-from keras.callbacks import EarlyStopping
-early_stopping = EarlyStopping(monitor='val_loss', patience=2)
 import time
-import data_process as load_data
 #np.random.seed(1337) # for reproducibility
-# Settings
+# Settings: bases to vectors.
 ltrdict = {'a':[1,0,0,0],
            'c':[0,1,0,0],
            'g':[0,0,1,0],
@@ -129,7 +117,6 @@ def my_kernel_initializer(shape, dtype=None):
     return x
 
 def loadModel():
-    #model.load_weights('my_model_weights.h5')
     #json and create model
     json_file = open('../model/mit/model.json', 'r')
     loaded_model_json = json_file.read()
@@ -140,34 +127,18 @@ def loadModel():
     print("Loaded model from disk")
     return model
 
+def saveModel(epoch):
+    # serialize model to JSON
+    model_json = model.to_json()
+    with open("../saved_model/model.json", "w") as json_file:
+        json_file.write(model_json)
+    #serialize weights to HDF5
+    name="../saved_model/model_"+str(epoch)+".h5"
+    model.save_weights(name)
+    print("Saved model to disk")
+    return
 
-def model_patern():
-    # build the model: a single LSTM
-    print('Build model...')
-    model = Sequential()
-    model.add(Conv1D(filters=1024,
-                     kernel_size=24,
-                     #kernel_initializer=my_kernel_initializer,
-                     #trainable=False,
-                     #padding='same',
-                     #activation=None,
-                     #use_bias=False,
-                     #bias_initializer= keras.initializers.Constant(value=-7),
-                     strides=1))
-    model.add(MaxPooling1D(pool_size=3))
-    model.add(Dropout(0.1))
-    model.add(LSTM(256,return_sequences=True))
-    model.add(Dropout(0.2))
-    model.add(Flatten())
-    model.add(Dense(1024))
-    model.add(Activation('relu'))
-    model.add(Dense(input_dim))
-    model.add(Activation('softmax'))
-    optimizer = RMSprop(lr=0.001)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer)
-    return model
-def model_CNN_LSTM_2D():
-    # build the model: a single LSTM
+def model_CNN_2D():
     print('Build model...')
     model = Sequential()
     model.add(Conv2D(
@@ -213,93 +184,9 @@ def model_CNN_LSTM_2D():
     model.compile(loss='binary_crossentropy', optimizer=optimizer,metrics=['accuracy'])
     return model
 
-def model_CNN_LSTM():
-    # build the model: a single LSTM
-    print('Build model...')
-    model = Sequential()
-    model.add(Conv1D(filters=1024,
-                     kernel_size=24,
-                     trainable=True,
-                     padding='valid',
-                     activation='relu',
-                     strides=1,
-                     input_shape=(batch_size,4)))
-    model.add(MaxPooling1D(pool_size=3))
-    model.add(Dropout(0.1))
-    model.add(LSTM(256,return_sequences=True))
-    model.add(Dropout(0.2))
-    model.add(Flatten())
-    model.add(Dense(1024))
-    model.add(Activation('relu'))
-    model.add(Dense(input_dim))
-    model.add(Activation('softmax'))
-    optimizer = RMSprop(lr=0.001)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer)
-    return model
-
-def model_CNN():
-    # build the model: a single LSTM
-    print('Build model...')
-    model = Sequential()
-    model.add(Conv1D(filters=320,
-                     kernel_size=6,
-                     trainable=True,
-                     padding='valid',
-                     activation='relu',
-                     strides=1,
-                     input_shape=(maxlen,input_dim)))
-    model.add(MaxPooling1D(pool_size=3,strides=3))
-    model.add(Dropout(0.1))
-
-    model.add(Conv1D(filters=480,
-                     kernel_size=4,
-                     trainable=True,
-                     padding='valid',
-                     activation='relu',
-                     strides=1))
-    model.add(MaxPooling1D(pool_size=2,strides=2))
-    model.add(Dropout(0.1))
-    model.add(Conv1D(filters=960,
-                     kernel_size=4,
-                     trainable=True,
-                     padding='valid',
-                     activation='relu',
-                     strides=1))
-    model.add(Dropout(0.2))
-    model.add(Flatten())
-    model.add(Dense(1024))
-    model.add(Activation('relu'))
-    model.add(Dense(2))
-    model.add(Activation('softmax'))
-    optimizer = RMSprop(lr=0.001)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer)
-    return model
-def model_LSTM():
-    # build the model: a single LSTM
-    print('Build model...')
-    model = Sequential()
-    model.add(LSTM(64, return_sequences=True))
-    model.add(LSTM(64, return_sequences=True))
-    model.add(LSTM(64))
-    model.add(Dense(input_dim, activation='softmax'))
-    optimizer = RMSprop(lr=0.001)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer)
-    return model
-
-def saveModel(epoch):
-    # serialize model to JSON
-    model_json = model.to_json()
-    with open("../saved_model/model.json", "w") as json_file:
-        json_file.write(model_json)
-    #serialize weights to HDF5
-    name="../saved_model/model_"+str(epoch)+".h5"
-    model.save_weights(name)
-    print("Saved model to disk")
-    return
-
 def on_epoch_end(epoch):
-    # Function invoked at end of each epoch. Prints generated text.
-    print('----- Testing entorpy after Epoch: %d' % (epoch+1))
+    # Function invoked at end of each epoch.
+    print('----- Testing accuracy after Epoch: %d' % (epoch+1))
     accuracy = 0
     batch_num = 0
     seqs,labels = read_fasta(test_path)
@@ -321,11 +208,11 @@ if __name__ == '__main__':
     batch_size = 64
     epochs = 10
     maxlen = 128
-    train_path = './data/generate_STR/total_train.fasta'
-    test_path = './data/generate_STR/total_test.fasta'
-    log_path = './data/log.txt'
+    train_path = '../data/generate_STR/total_train.fasta'
+    test_path = '../data/generate_STR/total_test.fasta'
+    log_path = '../data/log.txt'
     total_start_time = time.time()
-    model = model_CNN_LSTM_2D()
+    model = model_CNN_2D()
     #model = model_CNN()
     print(model.summary())
     accuracy = []
@@ -353,4 +240,3 @@ if __name__ == '__main__':
     total_elapsed_time = time.time() -total_start_time
     print('Test accuracy for epochs:',accuracy)
     print('Total time used is {:5.2f} s'.format(total_elapsed_time))
-    
