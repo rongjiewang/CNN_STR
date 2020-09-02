@@ -1,5 +1,5 @@
-# CNN_STR
-Utilizing Convolutional Neural Network (CNN) to classify Short Tandem Repeat (STR) sequences.
+# CNN-STR
+Classification Short Tandem Repeats Sequences Using Convolutional Neural Network Architectures.
 ## Install
 This is a step by step instruction for installing the CNN-STR for python 3.7*.
 ### Requirements for python modules & versions
