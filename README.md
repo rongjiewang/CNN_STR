@@ -7,6 +7,7 @@ This is a step by step instruction for installing the CNN-STR for python 3.7*.
 * keras == 2.3.1 
 * biopython == 1.76
 * numpy == 1.18.4  
+* pandas == 1.0.3
 ### Command to install
     pip install -r requirements.txt
     
