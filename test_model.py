@@ -1,27 +1,16 @@
 from __future__ import print_function
-from keras.callbacks import LambdaCallback, Callback
+import keras
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers import LSTM
-from keras.layers import Conv1D, MaxPooling1D
 from keras.layers.convolutional import Conv2D, MaxPooling2D
-from keras.regularizers import l1
 from keras.optimizers import RMSprop
-from keras.utils.data_utils import get_file
 from keras.models import model_from_json
 import numpy as np
 import random
-import sys
-import io
-import math
-import keras
 from keras.models import load_model
-from keras import backend as K
 from itertools import product
 from Bio import SeqIO
-from keras.callbacks import EarlyStopping
-early_stopping = EarlyStopping(monitor='val_loss', patience=2)
-import data_process as load_data
+import time
 #np.random.seed(1337) # for reproducibility
 # Settings
 ltrdict = {'a':[1,0,0,0],
@@ -77,22 +66,22 @@ def get_random_batch(seqs, labels):
 def loadModel(epoch):
     #model.load_weights('my_model_weights.h5')
     #json and create model
-    json_file = open('./saved_model/model.json', 'r')
+    json_file = open('../saved_model/model.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     model = model_from_json(loaded_model_json)
     # load weights into new model
-    name="./saved_model/model_"+str(epoch)+".h5"
+    name="../saved_model/model_"+str(epoch)+".h5"
     model.load_weights(name)
     print("Loaded model from disk")
     return model
 def saveModel(epoch):
     # serialize model to JSON
     model_json = model.to_json()
-    with open("./saved_model/model.json", "w") as json_file:
+    with open("../saved_model/model.json", "w") as json_file:
         json_file.write(model_json)
     #serialize weights to HDF5
-    name="./saved_model/model_"+str(epoch)+".h5"
+    name="../saved_model/model_"+str(epoch)+".h5"
     model.save_weights(name)
     print("Saved model to disk")
     return
@@ -100,7 +89,8 @@ def saveModel(epoch):
 if __name__ == '__main__':
     batch_size = 16
     maxlen = 128
-    test_path = './data/generate_STR/human_chr1_test.fasta'
+    test_path = '../data/generate_STR/human_chr1_test.fasta'
+    #test_path = '../data/generate_STR/human_chr1_test.fasta'
     model = loadModel(7)
     #model = model_CNN()
     print(model.summary())
@@ -120,4 +110,3 @@ if __name__ == '__main__':
                 error_num +=1
     print('accuracy is {:5.2f}'.format((len(labels)-error_num)*100/len(labels)))
     print("finishing")   
-    
