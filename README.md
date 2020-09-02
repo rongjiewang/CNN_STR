@@ -25,6 +25,9 @@ Training the model with train dataset, saved the model parameters to  "saved_mod
 Testing the model with saved training model with test dataset, output the accuracy for test dataset.  Command as follow:
    
     python test_model.py
-    
+
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
 ## Contact
 If you have any question, please contact the author rjwang.hit@gmail.com
