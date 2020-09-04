@@ -167,7 +167,6 @@ def saveDataAndLabel(data,label,description,curent_data):
 
 if __name__ == '__main__':
     #This is using reference seq and STR csv description to generate positive and negetive STR seqences
-    #choose the one dataset you wanted to process.
     refNameList = ['ASM522150v1','sacCer3','dm6','hg38_chr1']
     for i in refNameList:
         print("curent dataset:",i)
